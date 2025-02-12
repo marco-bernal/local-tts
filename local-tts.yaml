@@ -1,0 +1,10 @@
+# FIXME: Find out why didn't worked (Only if can't be done with UV. Otherwise, remove this file).
+# VU will replace conda and pip
+name: local-tts
+channels:
+  - conda-forge
+dependencies:
+    - python=3.9
+    - pip>=23.0
+    - TTS
+    - gradio
