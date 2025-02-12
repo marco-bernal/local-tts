@@ -3,6 +3,8 @@ from TTS.api import TTS
 import gradio as gr
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
+
+# TODO: Create dictionary or file to load available english models
 # Available english models:
 #  10: tts_models/en/ek1/tacotron2
 #  11: tts_models/en/ljspeech/tacotron2-DDC
@@ -34,11 +36,12 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 #  8: vocoder_models/en/vctk/hifigan_v2
 #  9: vocoder_models/en/sam/hifigan_v2
 
+# TODO: Validate if the output folder exists, else create it.
 def generate_audio(text):
-    tts = TTS(model_name='tts_models/en/ljspeech/glow-tts').to(device)
-    tts.tts_to_file(text=text, file_path="outputs/output.wav")
-    return "outputs/output.wav"
-
+    tts = TTS(model_name='tts_models/en/ljspeech/glow-tts').to(device) # Replace model name from dictionary
+    tts.tts_to_file(text=text, file_path="outputs/output.wav") # User should choose the file name
+    return "outputs/output.wav" # Delete
+# Improve UI
 gui = gr.Interface(
     fn=generate_audio,
     inputs=[gr.Text(label="Text"),],

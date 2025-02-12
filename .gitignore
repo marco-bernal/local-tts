@@ -215,9 +215,6 @@ cmake-build-*/
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
 
-# File-based project format
-*.iws
-
 # IntelliJ
 out/
 
@@ -247,3 +244,7 @@ fabric.properties
 
 .DS_Store/
 .DS_Store
+
+# tts app
+outputs/
+flagged/
