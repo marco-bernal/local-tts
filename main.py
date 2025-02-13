@@ -1,4 +1,7 @@
-# TODO: ADD comments/document functions, make private functions.
+"""TTS (text to speech) tool based on coqui-ai/TTS and Gradio.
+ https://github.com/coqui-ai/TTS
+ https://github.com/gradio-app/gradio
+"""
 import os
 import torch
 import pandas as pd
@@ -8,13 +11,23 @@ from TTS.api import TTS
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
+""" 
+Generates audio from a gradio input text, based on a selected model.
+
+Args:
+    model: gradio dropdown containing available models to TTS. 
+    text: user input to be TTS generated.
+    
+Returns:
+    output.wav file inside the 'outputs' folder. Every time a new TTS file is generated it gets replaced.    
+"""
 def generate_audio(model, text):
     tts = TTS(model_name = model).to(device)
     tts.tts_to_file(text = text, file_path="outputs/output.wav")
     return "outputs/output.wav" # Delete
 
 # TODO: Improve UI with gr.Blocks: Phase II.
-def launch_interface(models_df):
+def _launch_interface(models_df):
     interface = gr.Interface(
         fn = generate_audio,
         inputs = [
@@ -30,10 +43,10 @@ def launch_interface(models_df):
 
     interface.launch()
 
-def load_models(file_path):
+def _load_models(file_path):
     return pd.read_csv(file_path)
 
-def validate_output_folder(directory_path):
+def _validate_output_folder(directory_path):
     if not os.path.exists(directory_path):
         os.makedirs(directory_path)
         print(f"Directory '{directory_path}' created successfully.")
@@ -41,14 +54,14 @@ def validate_output_folder(directory_path):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    # Load models
+    """Load available models"""
     models_file_path = 'datasets/english_models.csv'
-    english_models = load_models(models_file_path)
+    english_models = _load_models(models_file_path)
     # print('Available models: ', english_models)
 
-    # Create output folder if it doesn't exist
-    validate_output_folder('outputs')
+    """Create output folder if it doesn't exist"""
+    _validate_output_folder('outputs')
 
-    #Launch UI
-    launch_interface(english_models)
+    """Launch UI"""
+    _launch_interface(english_models)
 

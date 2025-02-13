@@ -1,4 +1,4 @@
-## Local TTS (text to speech) tool.
+## TTS (text to speech) tool based on coqui-ai/TTS and Gradio.
 Generates speech from text with non-robotic voices. 
 
 ### Environment
@@ -15,29 +15,9 @@ Generates speech from text with non-robotic voices.
 
 ### Run:
 * Run manually from the project: ```python main.py```
-* Go to http://127.0.0.1:7860/, add text as input and click submit.
-* Download the audio file generated from the ```outputs``` folder.
-
-### TODO
-#### Backend:
-* Configure UV to manage dependencies.  
-* Refactor code.
-* Add unit/integration tests.
-* Add a docker file to containerize the app.
-* Test the docker image locally.
-* Deploy it to a VPS.
-
-#### Frontend:
-* Add combo box to add "Available" english models.
-* Add button to download the generated wav file.
-* Polish the UI.
-
-### Reference:
-https://www.youtube.com/watch?v=EyzRixV8s54
-
-### MVP release
-* Will contained models that work properly out of the box.
-* Simple but useful interface.
+* Go to http://127.0.0.1:7860/, select a model, add text as input and click submit.
+* Play generated audio. 
+* Save locally the audio file generated with the download button.
 
 #### Tested models:
 * 10,tts_models/en/ek1/tacotron2  -> <b>Doesn't work!.  Weights only load failed error.</b>
@@ -91,3 +71,18 @@ tts = TTS(model_name = model).to(device)
  File "/anaconda3/envs/tts/lib/python3.9/site-packages/TTS/utils/synthesizer.py", line 184, in _load_tts
     if self.tts_config["use_phonemes"] and self.tts_config["phonemizer"] is None:
 
+
+### TODO
+#### Backend:
+* Configure UV to manage dependencies.
+* Add unit/integration tests.
+* Add a docker file to containerize the app.
+* Test the docker image locally.
+* Deploy it to Huggingface.
+* Fix broken models if possible. Phase II.
+
+#### Frontend:
+* Polish the UI with gr.Blocks. Phase II.
+
+### Reference:
+https://www.youtube.com/watch?v=EyzRixV8s54
