@@ -1,54 +1,67 @@
+"""TTS (text to speech) tool based on coqui-ai/TTS and Gradio.
+ https://github.com/coqui-ai/TTS
+ https://github.com/gradio-app/gradio
+"""
+import os
 import torch
-from TTS.api import TTS
+import pandas as pd
 import gradio as gr
+
+from TTS.api import TTS
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-# TODO: Create dictionary or file to load available english models
-# Available english models:
-#  10: tts_models/en/ek1/tacotron2
-#  11: tts_models/en/ljspeech/tacotron2-DDC
-#  12: tts_models/en/ljspeech/tacotron2-DDC_ph
-#  13: tts_models/en/ljspeech/glow-tts
-#  14: tts_models/en/ljspeech/speedy-speech
-#  15: tts_models/en/ljspeech/tacotron2-DCA
-#  16: tts_models/en/ljspeech/vits
-#  17: tts_models/en/ljspeech/vits--neon
-#  18: tts_models/en/ljspeech/fast_pitch [already downloaded]
-#  19: tts_models/en/ljspeech/overflow
-#  20: tts_models/en/ljspeech/neural_hmm
-#  21: tts_models/en/vctk/vits
-#  22: tts_models/en/vctk/fast_pitch
-#  23: tts_models/en/sam/tacotron-DDC
-#  24: tts_models/en/blizzard2013/capacitron-t2-c50
-#  25: tts_models/en/blizzard2013/capacitron-t2-c150_v2
-#  26: tts_models/en/multi-dataset/tortoise-v2
-#  27: tts_models/en/jenny/jenny
-#
-#  32: tts_models/uk/mai/glow-tts
-#  33: tts_models/uk/mai/vits
-#
-#  3: vocoder_models/en/ek1/wavegrad
-#  4: vocoder_models/en/ljspeech/multiband-melgan
-#  5: vocoder_models/en/ljspeech/hifigan_v2 [already downloaded]
-#  6: vocoder_models/en/ljspeech/univnet
-#  7: vocoder_models/en/blizzard2013/hifigan_v2
-#  8: vocoder_models/en/vctk/hifigan_v2
-#  9: vocoder_models/en/sam/hifigan_v2
+""" 
+Generates audio from a gradio input text, based on a selected model.
 
-# TODO: Validate if the output folder exists, else create it.
-def generate_audio(text):
-    tts = TTS(model_name='tts_models/en/ljspeech/glow-tts').to(device) # Replace model name from dictionary
-    tts.tts_to_file(text=text, file_path="outputs/output.wav") # User should choose the file name
+Args:
+    model: gradio dropdown containing available models to TTS. 
+    text: user input to be TTS generated.
+    
+Returns:
+    output.wav file inside the 'outputs' folder. Every time a new TTS file is generated it gets replaced.    
+"""
+def generate_audio(model, text):
+    tts = TTS(model_name = model).to(device)
+    tts.tts_to_file(text = text, file_path="outputs/output.wav")
     return "outputs/output.wav" # Delete
-# Improve UI
-gui = gr.Interface(
-    fn=generate_audio,
-    inputs=[gr.Text(label="Text"),],
-    outputs=[gr.Audio(label="Audio"),]
-)
+
+# TODO: Improve UI with gr.Blocks: Phase II.
+def _launch_interface(models_df):
+    interface = gr.Interface(
+        fn = generate_audio,
+        inputs = [
+            gr.Dropdown(choices = list(models_df['name']), label="Available english models:"),
+            gr.Text(label="Text:")
+        ],
+        outputs = [
+            gr.Audio(label="Audio")
+        ],
+        title = "Text to Speech PoC with coqui-ai/TTS and Gradio.",
+        allow_flagging = "never"
+    )
+
+    interface.launch()
+
+def _load_models(file_path):
+    return pd.read_csv(file_path)
+
+def _validate_output_folder(directory_path):
+    if not os.path.exists(directory_path):
+        os.makedirs(directory_path)
+        print(f"Directory '{directory_path}' created successfully.")
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    gui.launch()
+    """Load available models"""
+    models_file_path = 'datasets/english_models.csv'
+    english_models = _load_models(models_file_path)
+    # print('Available models: ', english_models)
+
+    """Create output folder if it doesn't exist"""
+    _validate_output_folder('outputs')
+
+    """Launch UI"""
+    _launch_interface(english_models)
+

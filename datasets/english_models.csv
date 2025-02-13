@@ -1,0 +1,6 @@
+id,name
+11,tts_models/en/ljspeech/tacotron2-DDC
+12,tts_models/en/ljspeech/tacotron2-DDC_ph
+13,tts_models/en/ljspeech/glow-tts
+18,tts_models/en/ljspeech/fast_pitch
+27,tts_models/en/jenny/jenny
