@@ -1,0 +1,10 @@
+[project]
+name = "mab-tts"
+version = "0.1.0"
+description = "TTS (text to speech) tool based on coqui-ai/TTS and Gradio."
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "gradio>=4.44.1",
+    "tts>=0.22.0"
+]

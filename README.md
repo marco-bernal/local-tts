@@ -1,20 +1,58 @@
 ## TTS (text to speech) tool based on coqui-ai/TTS and Gradio.
 Generates speech from text with non-robotic voices. 
 
-### Environment
-##### Manually create a conda env (Hopefully to be replaced by UV)
-* conda create -n tts python=3.9 
-* conda activate tts
-
-### Dependencies:
+### Project Dependencies:
 * coqui-ai/TTS
   (pip install TTS)
 
 * Gradio Web UI
   (pip install gradio)
 
-### Run:
-* Run manually from the project: ```python main.py```
+### UV Environment
+* Install UV in the conda base env (Only once): `pip install uv`
+
+
+* Create and initialize a new project with UV and a specific python version: 
+
+`uv init --python 3.9 mab-tts` 
+
+This command will create a `pyproject.toml` configuration file that contains project's data and dependencies.
+
+Don't forget to rename the entry python file to `main.py`.
+
+* Install dependencies with UV:
+
+`uv add TTS gradio`
+
+This command will create a `uv.lock` file that contains the dependencies and their versions.
+
+* Run the python app with UV in port 7860:
+
+`uv run main.py --port 7860`
+
+* List available and installed UV python versions:
+
+`uv python list`
+
+* Update the venv with a different python version:
+
+`uv sync -p 3.11`
+
+### Docker commands.
+
+* Build the docker image: 
+
+```docker build . -t local/mab-tts:latest```
+  
+* Run a container on the port `7860` based on the above image: 
+
+```docker run -dp 7860:7860 <image_id>```
+
+* Check the container logs:
+
+```docker logs -f <container_id> ```
+
+### Usage:
 * Go to http://127.0.0.1:7860/, select a model, add text as input and click submit.
 * Play generated audio. 
 * Save locally the audio file generated with the download button.
@@ -50,39 +88,51 @@ More realistic, but requires GPU and a beefy machine. Otherwise, takes ages to g
 * v9,vocoder_models/en/sam/hifigan_v2 -> <b>Doesn't work!. use_phonemes.</b> 
 
 #### Errors:
-* Weights only load failed:
- This file can still be loaded, to do so you have two options, do those steps only if you trust the source of the checkpoint. 
+* <b>Weights only load failed:</b>
+
+This file can still be loaded, to do so you have two options, do those steps only if you trust the source of the checkpoint. 
+
         (1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
         (2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
         WeightsUnpickler error: Unsupported global: GLOBAL TTS.utils.radam.RAdam was not an allowed global by default. Please use `torch.serialization.add_safe_globals([RAdam])` or the `torch.serialization.safe_globals([RAdam])` context manager to allowlist this global if you trust this class/function.
 
-* No espeak found:
- No espeak backend found. Install espeak-ng or espeak to your system.
 
-* Multi-speaker:
+* <b>No espeak found:</b>
+
+No espeak backend found. Install espeak-ng or espeak to your system.
+
+
+* <b>Multi-speaker:</b>
+
 ValueError: Model is multi-speaker but no `speaker` is provided.
 
-* Characters not found:
+
+* <b>Characters not found:</b>
+
 [!] Character 'x' not found in the vocabulary. Discarding it.
 As a result, audio is distorted and unintelligible.
 
-* KeyError: 'use_phonemes'
+
+* <b>KeyError: 'use_phonemes'</b>
+
 tts = TTS(model_name = model).to(device)
  File "/anaconda3/envs/tts/lib/python3.9/site-packages/TTS/utils/synthesizer.py", line 184, in _load_tts
     if self.tts_config["use_phonemes"] and self.tts_config["phonemizer"] is None:
 
-
 ### TODO
-#### Backend:
-* Configure UV to manage dependencies.
-* Add unit/integration tests.
-* Add a docker file to containerize the app.
-* Test the docker image locally.
-* Deploy it to Huggingface.
-* Fix broken models if possible. Phase II.
+* MVP:
+  * Implement UV for this project. 
+  * Update docker file to work with UV. Don't forget to expose port 7860 for the UI
+  * Test container locally.
+  * Add unit/integration tests.
+  
+  * Deploy to Huggingface.
 
-#### Frontend:
-* Polish the UI with gr.Blocks. Phase II.
+
+* Phase II:
+  * Fix broken models if possible. 
+  * Polish the UI with gr.Blocks. 
+  * Deploy to a VPS.
 
 ### Reference:
 https://www.youtube.com/watch?v=EyzRixV8s54
