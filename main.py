@@ -38,7 +38,7 @@ def _launch_interface(models_df):
             gr.Audio(label="Audio")
         ],
         title = "Text to Speech PoC with coqui-ai/TTS and Gradio.",
-        allow_flagging = "never"
+        flagging_mode = "never"
     )
 
     interface.launch()
