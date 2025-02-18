@@ -9,7 +9,7 @@ import gradio as gr
 
 from TTS.api import TTS
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 """ 
 Generates audio from a gradio input text, based on a selected model.
@@ -19,10 +19,12 @@ Args:
     text: user input to be TTS generated.
     
 Returns:
-    output.wav file inside the 'outputs' folder. Every time a new TTS file is generated it gets replaced.    
+    output.wav file inside the 'outputs' folder. 
+    Every time a new TTS file is generated it gets replaced.    
 """
 def generate_audio(model, text):
-    tts = TTS(model_name = model).to(device)
+    """Generates audio from a gradio input text"""
+    tts = TTS(model_name = model).to(DEVICE)
     tts.tts_to_file(text = text, file_path="outputs/output.wav")
     return "outputs/output.wav" # Delete
 
@@ -54,14 +56,13 @@ def _validate_output_folder(directory_path):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    """Load available models"""
-    models_file_path = 'datasets/english_models.csv'
-    english_models = _load_models(models_file_path)
+    #Load available models
+    MODELS_FILE_PATH = 'datasets/english_models.csv'
+    english_models = _load_models(MODELS_FILE_PATH)
     # print('Available models: ', english_models)
 
-    """Create output folder if it doesn't exist"""
+    #Create output folder if it doesn't exist
     _validate_output_folder('outputs')
 
-    """Launch UI"""
+    #Launch UI
     _launch_interface(english_models)
-
