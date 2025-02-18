@@ -8,13 +8,17 @@ Generates speech from text with non-robotic voices.
 * Gradio Web UI
   (pip install gradio)
 
+### Transversal Dependencies:
+* pylint: code quality
+  (pip install pylint)  
+
 ### UV Environment
 * Install UV in the conda base env (Only once): `pip install uv`
 
 
 * Create and initialize a new project with UV and a specific python version: 
 
-`uv init --python 3.9 mab-tts` 
+`uv init --python 3.11 mab-tts` 
 
 This command will create a `pyproject.toml` configuration file that contains project's data and dependencies.
 
@@ -26,7 +30,7 @@ Don't forget to rename the entry python file to `main.py`.
 
 This command will create a `uv.lock` file that contains the dependencies and their versions.
 
-* Run the python app with UV in port 7860:
+* Locally run the app with UV in port 7860:
 
 `uv run main.py --port 7860`
 
@@ -37,6 +41,11 @@ This command will create a `uv.lock` file that contains the dependencies and the
 * Update the venv with a different python version:
 
 `uv sync -p 3.11`
+
+* Add new dependencies and update the environment:
+
+Delete the `uv.lock` file , `uv add pylint` and `uv sync`
+
 
 ### Docker commands.
 
@@ -121,18 +130,11 @@ tts = TTS(model_name = model).to(device)
 
 ### TODO
 * MVP:
-  * Implement UV for this project. 
-  * Update docker file to work with UV. Don't forget to expose port 7860 for the UI
-  * Test container locally.
-  * Add unit/integration tests.
-  
+  * Add unit/integration tests. Research how to do that.
   * Deploy to Huggingface.
-
 
 * Phase II:
   * Fix broken models if possible. 
   * Polish the UI with gr.Blocks. 
   * Deploy to a VPS.
-
-### Reference:
-https://www.youtube.com/watch?v=EyzRixV8s54
+  * Create CI/CD pipeline w/ GitHub actions.
