@@ -168,3 +168,5 @@ tts = TTS(model_name = model).to(device)
   * Polish the UI with gr.Blocks. 
   * Deploy to a VPS.
   * Create CI/CD pipeline w/ GitHub actions.
+
+Test changes from master to main
