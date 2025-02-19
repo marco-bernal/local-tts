@@ -20,7 +20,7 @@ Generates speech from text with non-robotic voices.
   (pip install gradio)
 
 ### Transversal Dependencies:
-* pylint: code quality
+* pylint: code quality. Only for development.
   (pip install pylint)  
 
 ### UV Environment
@@ -92,11 +92,14 @@ Value: Paste the HF token here.
 * Create/Configure a GitHub Actions `cicd.yml` file.
 
 ### Usage:
-* Go to http://127.0.0.1:7860/, select a model, add text as input and click submit.
+* Go to https://huggingface.co/spaces/mbernal84/mab-tts, select a model, add text as input and click submit. (Note: HF space might be down due to inactivity).
 * Play generated audio. 
 * Save locally the audio file generated with the download button.
 
-#### Tested models:
+![TTS PoC on HF spaces](HF_deployed.png)
+
+
+#### Tested models (locally):
 * 10,tts_models/en/ek1/tacotron2  -> <b>Doesn't work!.  Weights only load failed error.</b>
 * 11,tts_models/en/ljspeech/tacotron2-DDC -> <b>Works well!</b>
 * 12,tts_models/en/ljspeech/tacotron2-DDC_ph -> <b>Works well!</b>
@@ -159,6 +162,27 @@ tts = TTS(model_name = model).to(device)
     if self.tts_config["use_phonemes"] and self.tts_config["phonemizer"] is None:
 
 ### TODO
-  * Add unit/integration tests.
   * Fix broken models if possible. 
   * Polish the UI with gr.Blocks.
+
+### Final takeaways
+* UV is pretty new to be integrated with some other frameworks/platforms.<br> 
+Local development can be done, but deploying UV apps in conjunction with other technologies/environments might be challenging.
+
+
+* Huggingface's greatest advantage is that integrated with GitHub Actions/Docker is a really powerful FREE platform to demo PoCs and play with.
+
+
+* Development can be done with UV, and test it locally with docker. Then, the deployment to huggingface should be done with a different dockerfile
+and requirements.txt file. <br>
+This approach can be a little bit cumbersome, but needed if wanted to deploy to HF. <br>
+Another option is skip this altogether and deploy the app to a bare-bone VPS instead, just with UV support.  
+
+
+* For real enterprise grade apps/integrations is better to deploy to a VPS. Due to the flexibility and customization options that offers. 
+Plus, most of these type of apps are already deployed in this way, either in a public cloud or private infrastructure.
+
+
+### Deployment Strategy Summary
+* Use HF for showcasing a PoC of an independent or small app/model.
+* Use a bare-bone VPS for production ready use/integration with other services/apps/models.

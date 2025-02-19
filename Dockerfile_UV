@@ -1,6 +1,6 @@
 # This file works as it is in a local environment. It's been tested on Ubuntu 24.04 with no issues.
 # Although, relies on the root user to work. because UV doesn't support root less users.
-# Try this out in a VPS.
+# Just for VPS implementations.
 
 # Build the application in the `/app` directory.
 FROM ghcr.io/astral-sh/uv:python3.11-bookworm-slim AS builder
