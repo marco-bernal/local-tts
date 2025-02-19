@@ -1,5 +1,6 @@
 # This file is specific to HuggingFace spaces, since it relies on having a root-less user.
-# Using requirements.txt and standard python image since UV doesn't support root-less users up until now.
+# Using requirements.txt and a standard python image since UV doesn't support root-less users
+# and HF doesn't have official UV suport either, up until now: Feb '25.
 FROM python:3.11-slim-bookworm
 
 # Create a user to copy and download files.
