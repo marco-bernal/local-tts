@@ -24,3 +24,4 @@ jobs:
         env:
           HF: ${{ secrets.HF_TOKEN }}
         run: git push --force https://mbernal84:$HF@huggingface.co/spaces/mbernal84/mab-tts main
+
