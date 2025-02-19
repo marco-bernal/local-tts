@@ -1,3 +1,14 @@
+---
+title: Mab Tts
+emoji: 🏃
+colorFrom: purple
+colorTo: green
+sdk: docker
+pinned: false
+license: apache-2.0
+short_description: Text To Speech tool based on coqui-ai/TTS and Gradio.
+---
+
 ## TTS (text to speech) tool based on coqui-ai/TTS and Gradio.
 Generates speech from text with non-robotic voices. 
 
@@ -60,6 +71,25 @@ Delete the `uv.lock` file , `uv add pylint` and `uv sync`
 * Check the container logs:
 
 ```docker logs -f <container_id> ```
+
+### CI/CD Support with GitHub Actions and Hugging Face Spaces.
+
+* Create an HF space.
+* Add metadata from the HF space README file to the one in GitHub.
+* Create/Configure an HF Access Token:
+  HF Profile -> Settings -> Access Tokens -> New.
+
+Name: github-actions-deployment
+
+Role: Write
+
+Inside the GitHub repository: Setting -> Secrets -> Actions -> New Repo Secret.
+
+Name: HF_TOKEN
+
+Value: Paste the HF token here.
+
+* Create/Configure a GitHub Actions `cicd.yml` file.
 
 ### Usage:
 * Go to http://127.0.0.1:7860/, select a model, add text as input and click submit.
