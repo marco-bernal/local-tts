@@ -1,0 +1,40 @@
+# This file works as it is in a local environment. It's been tested on Ubuntu 24.04 with no issues.
+# Build the application in the `/app` directory.
+FROM ghcr.io/astral-sh/uv:python3.11-bookworm-slim AS builder
+# Enable bytecode compilation.
+ENV UV_COMPILE_BYTECODE=1
+# Copy from the cache instead of linking since it's a mounted volume.
+ENV UV_LINK_MODE=copy
+# Use the system interpreter across both images.
+ENV UV_PYTHON_DOWNLOADS=0
+
+# Set up '/app' as working directory.
+WORKDIR /app
+# Install the project's dependencies using the lockfile and settings.
+COPY uv.lock pyproject.toml /app/
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-install-project --no-dev
+# Add the rest of the source code and install it.
+# Installing separately from its dependencies allows optimal layer caching.
+COPY datasets/english_models.csv /app/datasets/english_models.csv
+COPY main.py /app
+RUN --mount=type=cache,target=/root/.cache/uv \
+  uv sync --frozen --no-dev
+
+# Final image with uv support to run the main script.
+FROM python:3.11-slim-bookworm
+# Copy the application from the builder.
+COPY --from=builder --chown=app:app /app /app
+# Install UV
+RUN pip install uv
+# Place executables in the path environment variable.
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Change to work directory
+WORKDIR /app
+# Set up server and port 7860, required by gradio.
+EXPOSE 7860
+ENV GRADIO_SERVER_NAME="0.0.0.0"
+
+# Command to run the app with UV.
+ENTRYPOINT ["uv", "run", "main.py"]

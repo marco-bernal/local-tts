@@ -159,14 +159,6 @@ tts = TTS(model_name = model).to(device)
     if self.tts_config["use_phonemes"] and self.tts_config["phonemizer"] is None:
 
 ### TODO
-* MVP:
-  * Add unit/integration tests. Research how to do that.
-  * Deploy to Huggingface.
-
-* Phase II:
+  * Add unit/integration tests.
   * Fix broken models if possible. 
-  * Polish the UI with gr.Blocks. 
-  * Deploy to a VPS.
-  * Create CI/CD pipeline w/ GitHub actions.
-
-Test changes from master to main
+  * Polish the UI with gr.Blocks.
