@@ -20,18 +20,16 @@ ENV HOME=/home/user \
 # Set up '/app' as working directory.
 WORKDIR $HOME/app
 
-# Change env var UV_CACHE_DIR
-ENV UV_CACHE_DIR=$HOME/.cache/uv
 # Install the project's dependencies using the lockfile and settings.
 COPY --chown=user uv.lock pyproject.toml $HOME/app/
-RUN --mount=type=cache,target=$UV_CACHE_DIR \
-    uv sync --frozen --no-install-project --no-dev
+RUN --mount=type=cache,target=$HOME/.cache/uv \
+    uv sync --refresh --frozen --no-install-project --no-dev
 # Add the rest of the source code and install it.
 # Installing separately from its dependencies allows optimal layer caching.
 COPY --chown=user datasets/english_models.csv $HOME/app/datasets/english_models.csv
 COPY --chown=user main.py $HOME/app
-RUN --mount=type=cache,target=$UV_CACHE_DIR \
-  uv sync --frozen --no-dev
+RUN --mount=type=cache,target=$HOME/.cache/uv \
+  uv sync --refresh --frozen --no-dev
 
 # Final image with uv support to run the main script.
 FROM python:3.11-slim-bookworm
